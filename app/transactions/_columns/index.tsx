@@ -12,6 +12,7 @@ import {
 
 import TransactionTypeBadge from "../_components/type-badge";
 import EditTransactionButton from "../_components/edit-transaction-button";
+import { formatCurrency } from "@/app/_utils/currency";
 
 export const transactionColumns: ColumnDef<Transaction>[] = [
   {
@@ -51,10 +52,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
     accessorKey: "amount",
     header: "Valor",
     cell: ({ row: { original: transaction } }) =>
-      new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-      }).format(Number(transaction.amount)),
+      formatCurrency(Number(transaction.amount)),
   },
   {
     accessorKey: "actions",

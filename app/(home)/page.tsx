@@ -7,6 +7,7 @@ import { isMatch } from "date-fns";
 import { getDashboard } from "../_data/get-dashboard";
 import TransactionsPieChart from "./_components/transactions-pie-chart";
 import ExpensesPerCategory from "./_components/expenses-per-category";
+import LastTransactions from "./_components/last-transactions";
 
 interface HomeProps {
   searchParams: { month: string };
@@ -22,7 +23,8 @@ export default async function Home({ searchParams: { month } }: HomeProps) {
   const monthIsInvalid = !month || !isMatch(month, "MM");
 
   if (monthIsInvalid) {
-    redirect("?month=01");
+    const currentMonth = new Date().toLocaleDateString("pt-BR").split("/")[1];
+    redirect(`?month=${currentMonth}`);
   }
 
   const dashboard = await getDashboard(month);
@@ -35,7 +37,7 @@ export default async function Home({ searchParams: { month } }: HomeProps) {
           <h1 className="text-2xl font-bold">Dashboard</h1>
           <TimeSelect />
         </div>
-        <div className="grid grid-cols-[2fr,1fr]">
+        <div className="grid grid-cols-[2fr,1fr] gap-6">
           <div className="flex flex-col gap-6">
             <SummaryCards {...JSON.parse(JSON.stringify(dashboard))} />
 
@@ -47,6 +49,9 @@ export default async function Home({ searchParams: { month } }: HomeProps) {
                 expensesPerCategory={dashboard.totalExpensePerCategory}
               />
             </div>
+          </div>
+          <div>
+            <LastTransactions lastTransactions={dashboard.lastTransactions} />
           </div>
         </div>
       </div>
